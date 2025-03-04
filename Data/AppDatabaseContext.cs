@@ -7,8 +7,6 @@ namespace dotnet_simplified_bank.Data
     {
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Seller> Sellers { get; set; }
-
         public DbSet<Transfer> Transfers { get; set; }
     }
 }

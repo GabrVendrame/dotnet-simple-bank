@@ -9,24 +9,22 @@ namespace dotnet_simplified_bank.Models
         [Key]
         public Guid ID { get; set; }
 
+        [Required]
         public decimal Amount { get; set; }
 
         [Required]
         public required Guid PayerID { get; set; }
 
-        public Guid? PayeeUserID { get; set; }
-
-        public Guid? PayeeSellerID { get; set; }
+        public Guid PayeeID { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        [Required]
         [ForeignKey("PayerID")]
-        public required User User { get; set; }
+        public required User Payer { get; set; }
 
-        [ForeignKey("PayeeUserID")]
-        public User? PayeeUser { get; set; }
-
-        [ForeignKey("PayeeSellerID")]
-        public Seller? Seller { get; set; }
+        [Required]
+        [ForeignKey("PayeeID")]
+        public required User Payee { get; set; }
     }
 }
