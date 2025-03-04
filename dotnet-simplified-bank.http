@@ -1,0 +1,6 @@
+@dotnet_simplified_bank_HostAddress = http://localhost:5118
+
+GET {{dotnet_simplified_bank_HostAddress}}/
+Accept: application/json
+
+###
