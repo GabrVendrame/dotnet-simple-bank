@@ -16,8 +16,6 @@ namespace dotnet_simplified_bank.Dtos.User
 
         public required string CpfCnpj { get; set; }
 
-        public UserRole Role { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

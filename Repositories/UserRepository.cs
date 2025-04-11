@@ -18,9 +18,9 @@ namespace dotnet_simplified_bank.Repositories
             _context.Users.Remove(user);
         }
 
-        public User? GetUser(Guid userID)
+        public User? GetUser(string userID)
         {
-            var user = _context.Users.FirstOrDefault(u => u.ID == userID);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userID);
 
             if (user == null) return null;
 

@@ -1,28 +1,20 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace dotnet_simplified_bank.Models
 {
-    public class User
+    public class User : IdentityUser
     {
-        [Required]
-        [Key]
-        public Guid ID { get; set; }
-
+        [Precision(18, 2)]
         public decimal Balance { get; set; }
 
         [Required]
-        public required string FullName { get; set; }
+        public string FullName { get; set; }
 
         [Required]
         [Key]
-        public required string Email { get; set; }
-
-        [Required]
-        public required string Password { get; set; }
-
-        public required string CpfCnpj { get; set; }
-
-        public UserRole Role { get; set; }
+        public string CpfCnpj { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

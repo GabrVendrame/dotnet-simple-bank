@@ -1,6 +1,4 @@
-using dotnet_simplified_bank.Models;
-
-namespace dotnet_simplified_bank.Dtos
+namespace dotnet_simplified_bank.Dtos.User
 {
     public class CreateUserDto
     {
@@ -12,6 +10,6 @@ namespace dotnet_simplified_bank.Dtos
 
         public required string CpfCnpj { get; set; }
 
-        public UserRole Role { get; set; }
+        public required string Phone { get; set; }
     }
 }

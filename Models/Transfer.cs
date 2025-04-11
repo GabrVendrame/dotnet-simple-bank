@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,15 +8,17 @@ namespace dotnet_simplified_bank.Models
     {
         [Required]
         [Key]
-        public Guid ID { get; set; }
+        public String Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
+        [Precision(18, 2)]
         public decimal Amount { get; set; }
 
         [Required]
-        public required Guid PayerID { get; set; }
+        public required String PayerID { get; set; }
 
-        public Guid PayeeID { get; set; }
+        [Required]
+        public required String PayeeID { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

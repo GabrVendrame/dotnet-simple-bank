@@ -1,27 +1,64 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using dotnet_simplified_bank.Dtos;
+using dotnet_simplified_bank.Dtos.User;
+using dotnet_simplified_bank.Interfaces;
+using dotnet_simplified_bank.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace dotnet_simplified_bank.Controllers
 {
-    [Route("[controller]")]
-    public class UserController(ILogger<UserController> logger) : Controller
+    [Route("v1/[controller]")]
+    [ApiController]
+    public class UserController(UserManager<User> userManager, SignInManager<User> loginManager, ITokenService tokenService) : ControllerBase
     {
-        private readonly ILogger<UserController> _logger = logger;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly SignInManager<User> _loginManager = loginManager;
+        private readonly ITokenService _tokenService = tokenService;
 
-        public IActionResult Index()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
-            return View();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var user = new User
+            {
+                UserName = createUserDto.Email,
+                Email = createUserDto.Email,
+                FullName = createUserDto.FullName,
+                CpfCnpj = createUserDto.CpfCnpj
+            };
+
+            var createdUser = await _userManager.CreateAsync(user, createUserDto.Password);
+            if (createdUser.Succeeded)
+            {
+                var userRole = user.CpfCnpj.Length == 11 ? "User" : "Seller";
+
+                var applyRole = await _userManager.AddToRoleAsync(user, userRole);
+
+                return applyRole.Succeeded ? Created() : StatusCode(500, applyRole.Errors);
+            }
+
+            return BadRequest(createdUser.Errors);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginUserDto)
         {
-            return View("Error!");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(loginUserDto.Email);
+
+            if (user == null) return NotFound("User not found");
+
+            var result = await _loginManager.CheckPasswordSignInAsync(user, loginUserDto.Password, false);
+
+            if (result.Succeeded)
+            {
+                var loginResponse = new { Token = _tokenService.GetToken(user) };
+                return Ok(loginResponse);
+            }
+
+            return Unauthorized("Invalid credentials");
         }
     }
 }

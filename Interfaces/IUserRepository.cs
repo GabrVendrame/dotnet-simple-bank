@@ -7,7 +7,7 @@ namespace dotnet_simplified_bank.Interfaces
     {
         bool CreateUser(User user);
 
-        User? GetUser(Guid userID);
+        User? GetUser(string userID);
 
         void DeleteUser(User user);
     }
