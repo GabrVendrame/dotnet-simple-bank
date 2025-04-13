@@ -34,7 +34,7 @@ namespace dotnet_simplified_bank.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CpfCnpj = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CpfCnpj = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -195,8 +195,8 @@ namespace dotnet_simplified_bank.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "sellerId", null, "Seller", "SELLER" },
-                    { "userId", null, "User", "USER" }
+                    { "5ab9c640-b672-468f-80a7-4a6f0a125c0e", null, "User", "USER" },
+                    { "e196f8ae-d648-45ad-848b-cb24ea536cd8", null, "Seller", "SELLER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -230,6 +230,12 @@ namespace dotnet_simplified_bank.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_CpfCnpj",
+                table: "AspNetUsers",
+                column: "CpfCnpj",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

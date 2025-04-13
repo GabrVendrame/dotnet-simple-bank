@@ -17,9 +17,11 @@ namespace dotnet_simplified_bank.Data
 
             builder.Entity<Transfer>().HasOne(t => t.Payee).WithMany().HasForeignKey(t => t.PayeeID).OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<User>().HasIndex(u => u.CpfCnpj).IsUnique();
+
             List<IdentityRole> roles = [
-                    new() { Id = "userId", Name = "User", NormalizedName = "USER" },
-                    new() { Id = "sellerId", Name = "Seller", NormalizedName = "SELLER" },
+                    new() { Id = "5ab9c640-b672-468f-80a7-4a6f0a125c0e", Name = "User", NormalizedName = "USER" },
+                    new() { Id = "e196f8ae-d648-45ad-848b-cb24ea536cd8", Name = "Seller", NormalizedName = "SELLER" },
             ];
             builder.Entity<IdentityRole>().HasData(roles);
         }

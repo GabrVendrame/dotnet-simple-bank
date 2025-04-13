@@ -12,7 +12,7 @@ using dotnet_simplified_bank.Data;
 namespace dotnet_simplified_bank.Migrations
 {
     [DbContext(typeof(AppDatabaseContext))]
-    [Migration("20250411132511_feat_create_database")]
+    [Migration("20250413134407_feat_create_database")]
     partial class feat_create_database
     {
         /// <inheritdoc />
@@ -54,13 +54,13 @@ namespace dotnet_simplified_bank.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "userId",
+                            Id = "5ab9c640-b672-468f-80a7-4a6f0a125c0e",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "sellerId",
+                            Id = "e196f8ae-d648-45ad-848b-cb24ea536cd8",
                             Name = "Seller",
                             NormalizedName = "SELLER"
                         });
@@ -218,7 +218,8 @@ namespace dotnet_simplified_bank.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CpfCnpj")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -271,6 +272,9 @@ namespace dotnet_simplified_bank.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CpfCnpj")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");

@@ -25,7 +25,8 @@ namespace dotnet_simplified_bank.Controllers
                 UserName = createUserDto.Email,
                 Email = createUserDto.Email,
                 FullName = createUserDto.FullName,
-                CpfCnpj = createUserDto.CpfCnpj
+                CpfCnpj = createUserDto.CpfCnpj,
+                PhoneNumber = createUserDto.Phone,
             };
 
             var createdUser = await _userManager.CreateAsync(user, createUserDto.Password);

@@ -13,7 +13,6 @@ namespace dotnet_simplified_bank.Models
         public string FullName { get; set; }
 
         [Required]
-        [Key]
         public string CpfCnpj { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
