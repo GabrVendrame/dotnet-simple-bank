@@ -24,10 +24,10 @@ namespace dotnet_simplified_bank.Models
 
         [Required]
         [ForeignKey("PayerID")]
-        public required User Payer { get; set; }
+        public User Payer { get; set; }
 
         [Required]
         [ForeignKey("PayeeID")]
-        public required User Payee { get; set; }
+        public User Payee { get; set; }
     }
 }
