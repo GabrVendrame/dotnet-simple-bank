@@ -24,23 +24,23 @@ namespace dotnet_simplified_bank.Controllers
             var payer = await _userManager.FindByIdAsync(transferDto.PayerID);
 
             if (payer!.Balance < transferDto.Amount)
-                return BadRequest(new { Error = "Saldo insuficiente para realizar a transferencia" });
+                return BadRequest(new { Error = "Insufficient balance" });
 
             var payee = await _userManager.FindByIdAsync(transferDto.PayeeID);
 
             if (payee == null)
-                return BadRequest(new { Error = "Usuario destinatario não encontrado" });
+                return BadRequest(new { Error = "Payee not found" });
 
             var transfer = await _transferRepository.CreateTransferAsync(transferDto.Amount, payer, payee);
 
             var sendMessageToPayee = await _externalServices.MessageTransferReceivedAsync();
 
-            var messageStatus = "Recebedor notificado";
+            var messageStatus = "Payee notified";
 
             // TODO: em caso de erro implementar uma fila pra retry?
-            if (!sendMessageToPayee) messageStatus = "Erro ao enviar mensagem de transferencia recebida";
+            if (!sendMessageToPayee) messageStatus = "Error sending message to payee";
 
-            return Created("Nova Transferencia", new { transfer.Id, transfer.Amount, transfer.PayeeID, messageStatus });
+            return Created("New Transfer", new { transfer.Id, transfer.Amount, transfer.PayeeID, messageStatus });
         }
     }
 }

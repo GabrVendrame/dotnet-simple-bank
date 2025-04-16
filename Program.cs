@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Simplified Bank API");
+app.MapGet("/", () => new { Status = "Alive", App = "Simple Bank API"});
 
 app.UseAuthorization();
 
