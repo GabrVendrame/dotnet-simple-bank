@@ -1,6 +1,7 @@
 ﻿using dotnet_simplified_bank.Data;
 using dotnet_simplified_bank.Interfaces;
 using dotnet_simplified_bank.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace dotnet_simplified_bank.Repositories
@@ -39,6 +40,26 @@ namespace dotnet_simplified_bank.Repositories
             CommitTransactionAsync(transaction);
 
             return transfer;
+        }
+
+        public async Task<Transfer?> GetTransferByIdAsync(string id)
+        {
+            var transfer = await _databaseContext.Transfers.FirstOrDefaultAsync(t => t.Id == id);
+
+            return transfer;
+        }
+
+        public async Task<bool> AddBalanceAsync(User user, decimal balance)
+        {
+            var transaction = await StartTransactionAsync();
+
+            user.Balance += balance;
+
+            var result = await _databaseContext.SaveChangesAsync();
+
+            CommitTransactionAsync(transaction);
+
+            return result >= 1;
         }
 
         private async Task<IDbContextTransaction> StartTransactionAsync()

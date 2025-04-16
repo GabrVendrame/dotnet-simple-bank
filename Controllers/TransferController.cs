@@ -42,5 +42,44 @@ namespace dotnet_simplified_bank.Controllers
 
             return Created("New Transfer", new { transfer.Id, transfer.Amount, transfer.PayeeID, messageStatus });
         }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetTransfer([FromRoute] string id)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var transfer = await _transferRepository.GetTransferByIdAsync(id);
+
+            if (transfer == null) return BadRequest("Transfer not found");
+
+            var transferDto = new GetTransferDto
+            {
+                Id = transfer.Id,
+                Amount = transfer.Amount,
+                PayerID = transfer.PayeeID,
+                PayeeID = transfer.PayeeID,
+                CreatedAt = transfer.CreatedAt
+            };
+
+            return Ok(transferDto);
+        }
+
+        [HttpPut("balance/{id}")]
+        [Authorize]
+        public async Task<IActionResult> AddBalance([FromRoute] string id, [FromBody] decimal balance)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null) return BadRequest("User not found");
+
+            var success = await _transferRepository.AddBalanceAsync(user, balance);
+
+            if (!success) return StatusCode(500, "Internal Server Error");
+
+            return Ok(new { NewBalance = user.Balance });
+        }
     }
 }
