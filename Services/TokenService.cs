@@ -39,7 +39,7 @@ namespace dotnet_simple_bank.Services
 
         public string GetToken(User user)
         {
-            return this.CreateToken(user);
+            return CreateToken(user);
         }
     }
 }
