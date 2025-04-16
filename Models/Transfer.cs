@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dotnet_simplified_bank.Models
+namespace dotnet_simple_bank.Models
 {
     public class Transfer
     {

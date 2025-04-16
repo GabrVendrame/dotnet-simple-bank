@@ -1,4 +1,4 @@
-namespace dotnet_simplified_bank.Dtos.User
+namespace dotnet_simple_bank.Dtos.User
 {
     public class GetUserDto
     {
@@ -8,9 +8,11 @@ namespace dotnet_simplified_bank.Dtos.User
 
         public string FullName { get; set; }
 
+        public string CpfCnpj { get; set; }
+
         public string Email { get; set; }
 
-        public string CpfCnpj { get; set; }
+        public string PhoneNumber { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

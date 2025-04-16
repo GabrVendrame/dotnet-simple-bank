@@ -1,13 +1,14 @@
-using dotnet_simplified_bank.Data;
-using dotnet_simplified_bank.Interfaces;
-using dotnet_simplified_bank.Models;
-using dotnet_simplified_bank.Repositories;
-using dotnet_simplified_bank.Services;
+using dotnet_simple_bank.Data;
+using dotnet_simple_bank.Interfaces;
+using dotnet_simple_bank.Models;
+using dotnet_simple_bank.Repositories;
+using dotnet_simple_bank.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using dotnet_simple_bank.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<User, IdentityRole>(options => {})
+builder.Services.AddIdentity<User, IdentityRole>(options => { })
     .AddEntityFrameworkStores<AppDatabaseContext>();
 
 builder.Services.AddAuthentication(opts =>
@@ -59,7 +60,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-app.MapGet("/", () => new { Status = "Alive", App = "Simple Bank API"});
+app.MapGet("/", () => new RootRoute());
 
 app.UseAuthorization();
 

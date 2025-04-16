@@ -4,7 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>dotnet_simplified_bank</RootNamespace>
+    <RootNamespace>dotnet_simple_bank</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

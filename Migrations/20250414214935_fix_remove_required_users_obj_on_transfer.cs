@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace dotnet_simplified_bank.Migrations
+namespace dotnet_simple_bank.Migrations
 {
     /// <inheritdoc />
     public partial class fix_remove_required_users_obj_on_transfer : Migration

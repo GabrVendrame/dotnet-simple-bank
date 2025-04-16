@@ -1,4 +1,4 @@
-﻿namespace dotnet_simplified_bank.Interfaces
+﻿namespace dotnet_simple_bank.Interfaces
 {
     public interface IExternalServices
     {

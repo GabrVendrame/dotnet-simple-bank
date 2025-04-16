@@ -1,9 +1,9 @@
-using dotnet_simplified_bank.Models;
+using dotnet_simple_bank.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace dotnet_simplified_bank.Data
+namespace dotnet_simple_bank.Data
 {
     public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : IdentityDbContext<User>(options)
     {

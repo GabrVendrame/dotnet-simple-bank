@@ -1,7 +1,7 @@
-﻿using dotnet_simplified_bank.Dtos.Transfer;
-using dotnet_simplified_bank.Models;
+﻿using dotnet_simple_bank.Dtos.Transfer;
+using dotnet_simple_bank.Models;
 
-namespace dotnet_simplified_bank.Interfaces
+namespace dotnet_simple_bank.Interfaces
 {
     public interface ITransferRepository
     {

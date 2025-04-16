@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace dotnet_simplified_bank.Dtos.Transfer
+namespace dotnet_simple_bank.Dtos.Transfer
 {
     public class GetTransferDto
     {

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using dotnet_simplified_bank.Data;
+using dotnet_simple_bank.Data;
 
 #nullable disable
 
-namespace dotnet_simplified_bank.Migrations
+namespace dotnet_simple_bank.Migrations
 {
     [DbContext(typeof(AppDatabaseContext))]
     partial class AppDatabaseContextModelSnapshot : ModelSnapshot
@@ -169,7 +169,7 @@ namespace dotnet_simplified_bank.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("dotnet_simplified_bank.Models.Transfer", b =>
+            modelBuilder.Entity("dotnet_simple_bank.Models.Transfer", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -198,7 +198,7 @@ namespace dotnet_simplified_bank.Migrations
                     b.ToTable("Transfers");
                 });
 
-            modelBuilder.Entity("dotnet_simplified_bank.Models.User", b =>
+            modelBuilder.Entity("dotnet_simple_bank.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -295,7 +295,7 @@ namespace dotnet_simplified_bank.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("dotnet_simplified_bank.Models.User", null)
+                    b.HasOne("dotnet_simple_bank.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -304,7 +304,7 @@ namespace dotnet_simplified_bank.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("dotnet_simplified_bank.Models.User", null)
+                    b.HasOne("dotnet_simple_bank.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,7 +319,7 @@ namespace dotnet_simplified_bank.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("dotnet_simplified_bank.Models.User", null)
+                    b.HasOne("dotnet_simple_bank.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -328,22 +328,22 @@ namespace dotnet_simplified_bank.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("dotnet_simplified_bank.Models.User", null)
+                    b.HasOne("dotnet_simple_bank.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("dotnet_simplified_bank.Models.Transfer", b =>
+            modelBuilder.Entity("dotnet_simple_bank.Models.Transfer", b =>
                 {
-                    b.HasOne("dotnet_simplified_bank.Models.User", "Payee")
+                    b.HasOne("dotnet_simple_bank.Models.User", "Payee")
                         .WithMany()
                         .HasForeignKey("PayeeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("dotnet_simplified_bank.Models.User", "Payer")
+                    b.HasOne("dotnet_simple_bank.Models.User", "Payer")
                         .WithMany()
                         .HasForeignKey("PayerID")
                         .OnDelete(DeleteBehavior.Restrict)

@@ -1,11 +1,11 @@
-﻿using dotnet_simplified_bank.Interfaces;
-using dotnet_simplified_bank.Models;
+﻿using dotnet_simple_bank.Interfaces;
+using dotnet_simple_bank.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace dotnet_simplified_bank.Services
+namespace dotnet_simple_bank.Services
 {
     public class TokenService(IConfiguration config) : ITokenService
     {

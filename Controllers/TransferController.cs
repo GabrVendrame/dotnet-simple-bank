@@ -1,11 +1,13 @@
-﻿using dotnet_simplified_bank.Dtos.Transfer;
-using dotnet_simplified_bank.Interfaces;
-using dotnet_simplified_bank.Models;
+﻿using dotnet_simple_bank.Common;
+using dotnet_simple_bank.Dtos.Transfer;
+using dotnet_simple_bank.Interfaces;
+using dotnet_simple_bank.Mappers;
+using dotnet_simple_bank.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_simplified_bank.Controllers
+namespace dotnet_simple_bank.Controllers
 {
     [Route("v1/[controller]")]
     [ApiController]
@@ -24,23 +26,25 @@ namespace dotnet_simplified_bank.Controllers
             var payer = await _userManager.FindByIdAsync(transferDto.PayerID);
 
             if (payer!.Balance < transferDto.Amount)
-                return BadRequest(new { Error = "Insufficient balance" });
+                return BadRequest(CustomErrors.BadRequest("Insufficient balance"));
 
             var payee = await _userManager.FindByIdAsync(transferDto.PayeeID);
 
             if (payee == null)
-                return BadRequest(new { Error = "Payee not found" });
+                return NotFound(CustomErrors.NotFound("Payee not found"));
 
             var transfer = await _transferRepository.CreateTransferAsync(transferDto.Amount, payer, payee);
 
+            if (transfer.Id == string.Empty) return StatusCode(500, CustomErrors.InternalServerError("Transfer failed"));
+
             var sendMessageToPayee = await _externalServices.MessageTransferReceivedAsync();
 
-            var messageStatus = "Payee notified";
+            var createdResponse = Mapper.TransferToCreateTransferResponseDto(transfer);
 
             // TODO: em caso de erro implementar uma fila pra retry?
-            if (!sendMessageToPayee) messageStatus = "Error sending message to payee";
+            if (!sendMessageToPayee) createdResponse.MessageStatus = "Error sending message to payee";
 
-            return Created("New Transfer", new { transfer.Id, transfer.Amount, transfer.PayeeID, messageStatus });
+            return Created("New Transfer", createdResponse);
         }
 
         [HttpGet("{id}")]
@@ -51,35 +55,30 @@ namespace dotnet_simplified_bank.Controllers
 
             var transfer = await _transferRepository.GetTransferByIdAsync(id);
 
-            if (transfer == null) return BadRequest("Transfer not found");
+            if (transfer == null) return NotFound(CustomErrors.NotFound("Transfer not found"));
 
-            var transferDto = new GetTransferDto
-            {
-                Id = transfer.Id,
-                Amount = transfer.Amount,
-                PayerID = transfer.PayeeID,
-                PayeeID = transfer.PayeeID,
-                CreatedAt = transfer.CreatedAt
-            };
+            var transferDto = Mapper.TransferToGetTransferDto(transfer);
 
             return Ok(transferDto);
         }
 
         [HttpPut("balance/{id}")]
         [Authorize]
-        public async Task<IActionResult> AddBalance([FromRoute] string id, [FromBody] decimal balance)
+        public async Task<IActionResult> AddBalance([FromRoute] string id, [FromBody] AddBalanceDto addBalanceDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             
             var user = await _userManager.FindByIdAsync(id);
 
-            if (user == null) return BadRequest("User not found");
+            if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
 
-            var success = await _transferRepository.AddBalanceAsync(user, balance);
+            var success = await _transferRepository.AddBalanceAsync(user, addBalanceDto.Balance);
 
             if (!success) return StatusCode(500, "Internal Server Error");
 
-            return Ok(new { NewBalance = user.Balance });
+            var balanceResponse = Mapper.MapAddBalanceDto(user);
+
+            return Ok(balanceResponse);
         }
     }
 }

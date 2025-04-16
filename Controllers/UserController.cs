@@ -1,12 +1,14 @@
-using dotnet_simplified_bank.Dtos;
-using dotnet_simplified_bank.Dtos.User;
-using dotnet_simplified_bank.Interfaces;
-using dotnet_simplified_bank.Models;
+using dotnet_simple_bank.Common;
+using dotnet_simple_bank.Dtos;
+using dotnet_simple_bank.Dtos.User;
+using dotnet_simple_bank.Interfaces;
+using dotnet_simple_bank.Mappers;
+using dotnet_simple_bank.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_simplified_bank.Controllers
+namespace dotnet_simple_bank.Controllers
 {
     [Route("v1/[controller]")]
     [ApiController]
@@ -21,14 +23,7 @@ namespace dotnet_simplified_bank.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var user = new User
-            {
-                UserName = createUserDto.Email,
-                Email = createUserDto.Email,
-                FullName = createUserDto.FullName,
-                CpfCnpj = createUserDto.CpfCnpj,
-                PhoneNumber = createUserDto.Phone,
-            };
+            var user = Mapper.CreateUserDtoToUser(createUserDto);
 
             var createdUser = await _userManager.CreateAsync(user, createUserDto.Password);
             if (createdUser.Succeeded)
@@ -50,39 +45,30 @@ namespace dotnet_simplified_bank.Controllers
 
             var user = await _userManager.FindByEmailAsync(loginUserDto.Email);
 
-            if (user == null) return NotFound("User not found");
+            if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
 
             var result = await _loginManager.CheckPasswordSignInAsync(user, loginUserDto.Password, false);
 
             if (result.Succeeded)
             {
-                var loginResponse = new { Token = _tokenService.GetToken(user) };
+                LoginResponseDto loginResponse = new() { Token = _tokenService.GetToken(user) };
                 return Ok(loginResponse);
             }
 
-            return Unauthorized("Invalid credentials");
+            return Unauthorized(CustomErrors.Unauthorized("Invalid Credentials"));
         }
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetUser([FromRoute] string id)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = await _userManager.FindByIdAsync(id);
 
-            if (user == null) return NotFound("User not found");
+            if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
 
-            var userDto = new GetUserDto
-            {
-                Id = user.Id,
-                Balance = user.Balance,
-                FullName = user.FullName,
-                Email = user.Email,
-                CpfCnpj = user.CpfCnpj,
-                CreatedAt = user.CreatedAt,
-                UpdatedAt = user.UpdatedAt,
-            };
+            var userDto = Mapper.UserToGetUserDto(user);
 
             return Ok(userDto);
         }
@@ -95,7 +81,7 @@ namespace dotnet_simplified_bank.Controllers
 
             var user = await _userManager.FindByIdAsync(id);
 
-            if (user == null) NotFound("User not found");
+            if (user == null) NotFound(CustomErrors.NotFound("User not found"));
 
             if (!string.IsNullOrEmpty(editDto.PhoneNumber)) user.PhoneNumber = editDto.PhoneNumber;
 
@@ -103,7 +89,9 @@ namespace dotnet_simplified_bank.Controllers
 
             if (!phoneUpdateResult.Succeeded) return BadRequest(phoneUpdateResult.Errors);
 
-            return Ok(user);
+            var userResponse = Mapper.UserToGetUserDto(user);
+
+            return Ok(userResponse);
         }
 
         [HttpDelete("{id}")]
@@ -114,7 +102,7 @@ namespace dotnet_simplified_bank.Controllers
 
             var user = await _userManager.FindByIdAsync(id);
 
-            if (user == null) NotFound("User not found");
+            if (user == null) NotFound(CustomErrors.NotFound("User not found"));
 
             await _userManager.DeleteAsync(user);
 

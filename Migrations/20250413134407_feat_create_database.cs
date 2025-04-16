@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace dotnet_simplified_bank.Migrations
+namespace dotnet_simple_bank.Migrations
 {
     /// <inheritdoc />
     public partial class feat_create_database : Migration

@@ -1,10 +1,12 @@
-﻿using dotnet_simplified_bank.Data;
-using dotnet_simplified_bank.Interfaces;
-using dotnet_simplified_bank.Models;
+﻿using dotnet_simple_bank.Data;
+using dotnet_simple_bank.Dtos.Transfer;
+using dotnet_simple_bank.Interfaces;
+using dotnet_simple_bank.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace dotnet_simplified_bank.Repositories
+namespace dotnet_simple_bank.Repositories
 {
     public class TransferRepository(AppDatabaseContext databaseContext, IExternalServices externalServices) : ITransferRepository
     {
@@ -31,7 +33,14 @@ namespace dotnet_simplified_bank.Repositories
             if (!await _externalServices.AuthTransferAsync())
             {
                 RollbackTransactionAsync(transaction);
-                return new Transfer { PayeeID = string.Empty, PayerID = string.Empty };
+                var transferErrorResponse = new Transfer
+                {
+                    Id = string.Empty,
+                    Amount = 0,
+                    PayerID = string.Empty,
+                    PayeeID = string.Empty,
+                };
+                return transferErrorResponse;
             }
 
             await _databaseContext.Transfers.AddAsync(transfer);

@@ -1,4 +1,4 @@
-﻿namespace dotnet_simplified_bank.Dtos.User
+﻿namespace dotnet_simple_bank.Dtos.User
 {
     public class EditUserDto
     {

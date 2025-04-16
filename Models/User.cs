@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace dotnet_simplified_bank.Models
+namespace dotnet_simple_bank.Models
 {
     public class User : IdentityUser
     {

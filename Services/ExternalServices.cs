@@ -1,6 +1,6 @@
-﻿using dotnet_simplified_bank.Interfaces;
+﻿using dotnet_simple_bank.Interfaces;
 
-namespace dotnet_simplified_bank.Services
+namespace dotnet_simple_bank.Services
 {
     public class ExternalServices(HttpClient httpClient) : IExternalServices
     {
