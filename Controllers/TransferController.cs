@@ -6,6 +6,7 @@ using dotnet_simple_bank.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace dotnet_simple_bank.Controllers
 {
@@ -23,7 +24,9 @@ namespace dotnet_simple_bank.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var payer = await _userManager.FindByIdAsync(transferDto.PayerID);
+            var payerEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            var payer = await _userManager.FindByEmailAsync(payerEmail);
 
             if (payer!.Balance < transferDto.Amount)
                 return BadRequest(CustomErrors.BadRequest("Insufficient balance"));
@@ -60,25 +63,6 @@ namespace dotnet_simple_bank.Controllers
             var transferDto = Mapper.TransferToGetTransferDto(transfer);
 
             return Ok(transferDto);
-        }
-
-        [HttpPut("balance/{id}")]
-        [Authorize]
-        public async Task<IActionResult> AddBalance([FromRoute] string id, [FromBody] AddBalanceDto addBalanceDto)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-            var user = await _userManager.FindByIdAsync(id);
-
-            if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
-
-            var success = await _transferRepository.AddBalanceAsync(user, addBalanceDto.Balance);
-
-            if (!success) return StatusCode(500, "Internal Server Error");
-
-            var balanceResponse = Mapper.MapAddBalanceDto(user);
-
-            return Ok(balanceResponse);
         }
     }
 }

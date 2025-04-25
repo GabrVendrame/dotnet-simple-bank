@@ -1,4 +1,4 @@
-﻿namespace dotnet_simple_bank.Dtos.Transfer
+﻿namespace dotnet_simple_bank.Dtos.Balance
 {
     public class AddBalanceDto
     {

@@ -10,9 +10,6 @@ namespace dotnet_simple_bank.Dtos.Transfer
         public decimal Amount { get; set; }
 
         [Required]
-        public required String PayerID { get; set; }
-
-        [Required]
         public required String PayeeID { get; set; }
     }
 }

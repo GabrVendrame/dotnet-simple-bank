@@ -1,4 +1,5 @@
-﻿using dotnet_simple_bank.Dtos.Transfer;
+﻿using dotnet_simple_bank.Dtos.Balance;
+using dotnet_simple_bank.Dtos.Transfer;
 using dotnet_simple_bank.Dtos.User;
 using dotnet_simple_bank.Models;
 
@@ -56,11 +57,15 @@ namespace dotnet_simple_bank.Mappers
             };
         }
 
-        public static AddBalanceResponseDto MapAddBalanceDto(User user)
+        public static GetBalanceDto UserToGetBalanceDto(User user)
         {
-            return new AddBalanceResponseDto
+            return new GetBalanceDto
             {
-                NewBalance = user.Balance
+                Balance = user.Balance,
+                FullName = user.FullName,
+                CpfCnpj = user.CpfCnpj,
+                Email = user.Email,
+                UpdatedAt = user.UpdatedAt
             };
         }
     }
