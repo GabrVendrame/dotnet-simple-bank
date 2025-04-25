@@ -1,4 +1,4 @@
-namespace dotnet_simple_bank.Dtos
+namespace dotnet_simple_bank.Dtos.User
 {
     public class LoginDto
     {
