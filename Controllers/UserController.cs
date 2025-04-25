@@ -1,5 +1,4 @@
 using dotnet_simple_bank.Common;
-using dotnet_simple_bank.Dtos;
 using dotnet_simple_bank.Dtos.User;
 using dotnet_simple_bank.Interfaces;
 using dotnet_simple_bank.Mappers;
@@ -7,6 +6,7 @@ using dotnet_simple_bank.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace dotnet_simple_bank.Controllers
 {
@@ -51,20 +51,22 @@ namespace dotnet_simple_bank.Controllers
 
             if (result.Succeeded)
             {
-                LoginResponseDto loginResponse = new() { Token = _tokenService.GetToken(user) };
+                LoginResponseDto loginResponse = new() { Email = user.Email, Token = _tokenService.GetToken(user) };
                 return Ok(loginResponse);
             }
 
             return Unauthorized(CustomErrors.Unauthorized("Invalid Credentials"));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUser([FromRoute] string id)
+        public async Task<IActionResult> GetUser()
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var user = await _userManager.FindByIdAsync(id);
+            var email = User.FindFirst(ClaimTypes.Email).Value;
+
+            var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
 
@@ -73,13 +75,15 @@ namespace dotnet_simple_bank.Controllers
             return Ok(userDto);
         }
 
-        [HttpPut("{id}")]
-        [Authorize(Roles = "User, Seller")]
-        public async Task<IActionResult> EditUser([FromRoute] string id, [FromBody] EditUserDto editDto)
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> EditUser([FromBody] EditUserDto editDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var user = await _userManager.FindByIdAsync(id);
+            var email = User.FindFirst(ClaimTypes.Email).Value;
+
+            var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null) NotFound(CustomErrors.NotFound("User not found"));
 
