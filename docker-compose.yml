@@ -1,0 +1,33 @@
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server
+    container_name: simple-bank-db
+    environment:
+      SA_PASSWORD: "2>@-4bSk5zJ0"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - simple-bank-volume:/var/opt/mssql
+    networks:
+      - simple-bank-network
+
+  api:
+    build: .
+    container_name: simple-bank-api
+    ports:
+      - "5118:8080"
+    depends_on:
+      - database
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=simple-bank-db;Database=SimpleBank;User Id=sa;Password=2>@-4bSk5zJ0;TrustServerCertificate=True;
+    networks:
+      - simple-bank-network
+
+volumes:
+  simple-bank-volume:
+    driver: local
+
+networks:
+  simple-bank-network:
+    driver: bridge    
