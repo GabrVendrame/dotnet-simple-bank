@@ -25,6 +25,24 @@ Projeto baseado no desafio de backend do PicPay.
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Docker Compose](https://docs.docker.com/compose/)
 
+### ⚙️ Configuração do JWT Token
+
+Antes de rodar o projeto é necessário definir as variáveis para a geração de tokens JWT no [appsettings.json](./appsettings.json).
+
+```json
+{
+  "JWT": {
+    "Secret": "a-valid-string-secret-that-is-at-least-512-bits-long-which-is-very-long",
+    "Issuer": "simplebank",
+    "Audience": "simplebank"
+  }
+}
+```
+
+- `Secret`: chave pra assinar o token, utiliza algoritmo HS512. Escolha uma string com pelo menos 32 caracteres.
+- `Issuer`: identificação de quem emite o token. (Recomendação: utilizar o exemplo acima)
+- `Audience`: identificação de quem pode consumir o token. (Recomendação: utilizar o exemplo acima)
+
 ### 🐋 Subindo com Docker Compose
 
 ```bash
