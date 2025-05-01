@@ -75,6 +75,21 @@ namespace dotnet_simple_bank.Controllers
             return Ok(userDto);
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserById([FromRoute] string id)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(id);
+
+            if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
+
+            var userDto = Mapper.UserToGetUserDto(user);
+
+            return Ok(userDto);
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> EditUser([FromBody] EditUserDto editDto)
