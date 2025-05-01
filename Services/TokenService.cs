@@ -10,7 +10,7 @@ namespace dotnet_simple_bank.Services
     public class TokenService(IConfiguration config) : ITokenService
     {
         private readonly IConfiguration _config = config;
-        private readonly SymmetricSecurityKey _securityKey = new(Encoding.UTF8.GetBytes(config["JWT:LoginKey"]!));
+        private readonly SymmetricSecurityKey _securityKey = new(Encoding.UTF8.GetBytes(config["JWT:Secret"]!));
 
         private string CreateToken(User user)
         {

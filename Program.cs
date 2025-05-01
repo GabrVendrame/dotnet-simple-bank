@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(opts =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:LoginKey"]!))
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]!))
     };
 });
 
@@ -63,8 +63,8 @@ using (var scope = app.Services.CreateScope())
         WaitAndRetry(
             retryCount: 5,
             sleepDurationProvider: attempts => TimeSpan.FromSeconds(Math.Pow(2, attempts)),
-            onRetry: (exception, timeSpan) => 
-            { 
+            onRetry: (exception, timeSpan) =>
+            {
                 logger.LogWarning(
                     "[RETRY] Failure applying database migrations. Retrying in {timeSpan.TotalSeconds} seconds. Error: {exception.Message}",
                     timeSpan.TotalSeconds, exception.Message
