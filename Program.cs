@@ -8,7 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using dotnet_simple_bank.Common;
+using dotnet_simple_bank.Dtos;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddAuthentication(opts =>
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITransferRepository, TransferRepository>();
+builder.Services.AddScoped<IBalanceRepository, BalanceRepository>();
 builder.Services.AddHttpClient<IExternalServices, ExternalServices>(client =>
 {
     client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.43.3");
@@ -50,17 +52,36 @@ builder.Services.AddHttpClient<IExternalServices, ExternalServices>(client =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Apply migrations
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDatabaseContext>();
 
-    app.MapScalarApiReference();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    var retry = Policy.Handle<Exception>().
+        WaitAndRetry(
+            retryCount: 5,
+            sleepDurationProvider: attempts => TimeSpan.FromSeconds(Math.Pow(2, attempts)),
+            onRetry: (exception, timeSpan) => 
+            { 
+                logger.LogWarning(
+                    "[RETRY] Failure applying database migrations. Retrying in {timeSpan.TotalSeconds} seconds. Error: {exception.Message}",
+                    timeSpan.TotalSeconds, exception.Message
+                );
+            }
+        );
+
+    retry.Execute(() => { dbContext.Database.Migrate(); });
 }
+
+// Configure the HTTP request pipeline.
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 // app.UseHttpsRedirection();
 
-app.MapGet("/", () => new RootRoute());
+app.MapGet("/", () => new RootRoute(StatusCodes.Status200OK));
 
 app.UseAuthorization();
 
