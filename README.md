@@ -39,7 +39,7 @@ Antes de rodar o projeto é necessário definir as variáveis para a geração d
 }
 ```
 
-- `Secret`: chave pra assinar o token, utiliza algoritmo HS512. Escolha uma string com pelo menos 32 caracteres.
+- `Secret`: chave pra assinar o token, utiliza algoritmo HS512. Escolha uma string com pelo menos 64 caracteres.
 - `Issuer`: identificação de quem emite o token. (Recomendação: utilizar o exemplo acima)
 - `Audience`: identificação de quem pode consumir o token. (Recomendação: utilizar o exemplo acima)
 
