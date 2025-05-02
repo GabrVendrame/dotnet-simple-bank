@@ -4,7 +4,7 @@ using FakeItEasy;
 using Microsoft.Extensions.Configuration;
 using static dotnet_simple_bank.Common.CustomExceptions;
 
-namespace simple_bank_test
+namespace simple_bank_test.Unit
 {
     public class TokenServiceTests
     {
@@ -42,7 +42,7 @@ namespace simple_bank_test
         }
 
         [Fact]
-        public void ShouldNotGetTokenInvalidSecret()
+        public void ShouldNotGetToken_InvalidSecret()
         {
             A.CallTo(() => config["JWT:Secret"]).Returns(invalidSecret);
 
@@ -52,7 +52,7 @@ namespace simple_bank_test
         }
 
         [Fact]
-        public void ShouldNotGetTokenEmptyEmail()
+        public void ShouldNotGetToken_EmptyEmail()
         {
             A.CallTo(() => config["JWT:Secret"]).Returns(validSecret);
             var tokenService = new TokenService(config);
@@ -62,7 +62,7 @@ namespace simple_bank_test
         }
 
         [Fact]
-        public void ShouldNotGetTokenEmptyCpfCnpj()
+        public void ShouldNotGetToken_EmptyCpfCnpj()
         {
             A.CallTo(() => config["JWT:Secret"]).Returns(validSecret);
 
