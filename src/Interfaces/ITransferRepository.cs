@@ -1,5 +1,4 @@
-﻿using dotnet_simple_bank.Dtos.Transfer;
-using dotnet_simple_bank.Models;
+﻿using dotnet_simple_bank.Models;
 
 namespace dotnet_simple_bank.Interfaces
 {

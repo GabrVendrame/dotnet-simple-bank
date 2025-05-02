@@ -1,7 +1,5 @@
 ﻿using dotnet_simple_bank.Data;
-using dotnet_simple_bank.Dtos.Balance;
 using dotnet_simple_bank.Interfaces;
-using dotnet_simple_bank.Mappers;
 using dotnet_simple_bank.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
