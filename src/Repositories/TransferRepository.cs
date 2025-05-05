@@ -25,7 +25,7 @@ namespace dotnet_simple_bank.Repositories
 
             if (!await _externalServices.AuthTransferAsync())
             {
-                RollbackTransactionAsync(transaction);
+                await RollbackTransactionAsync(transaction);
                 
                 return null;
             }
@@ -40,7 +40,7 @@ namespace dotnet_simple_bank.Repositories
             await _databaseContext.Transfers.AddAsync(transfer);
             await _databaseContext.SaveChangesAsync();
 
-            CommitTransactionAsync(transaction);
+            await CommitTransactionAsync(transaction);
 
             return transfer;
         }
@@ -57,12 +57,12 @@ namespace dotnet_simple_bank.Repositories
             return await _databaseContext.Database.BeginTransactionAsync();
         }
 
-        private static async void CommitTransactionAsync(IDbContextTransaction transaction)
+        private static async Task CommitTransactionAsync(IDbContextTransaction transaction)
         {
             await transaction.CommitAsync();
         }
 
-        private static async void RollbackTransactionAsync(IDbContextTransaction transaction)
+        private static async Task RollbackTransactionAsync(IDbContextTransaction transaction)
         {
             await transaction.RollbackAsync();
         }

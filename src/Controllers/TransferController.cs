@@ -28,6 +28,8 @@ namespace dotnet_simple_bank.Controllers
 
             var payer = await _userManager.FindByEmailAsync(payerEmail);
 
+            if (transferDto.Amount <= 0) return BadRequest(CustomErrors.BadRequest("Transfer amount must be greater than 0"));
+
             if (payer!.Balance < transferDto.Amount)
                 return BadRequest(CustomErrors.BadRequest("Insufficient balance"));
 

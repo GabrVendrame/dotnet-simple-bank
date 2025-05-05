@@ -8,22 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace simple_bank_test.Unit
 {
-    public class TransferRepositoryTests
+    public class TransferRepositoryTests : IDisposable
     {
-        private readonly AppDatabaseContext dbContext = CreateTestDatabase();
+        private readonly SqliteConnection connection = new ("Data Source=:memory:");
         private readonly IExternalServices extServices = A.Fake<IExternalServices>();
-        private readonly ITransferRepository transferRepository;
+        private readonly AppDatabaseContext dbContext;
+        private readonly TransferRepository transferRepository;
 
         public TransferRepositoryTests()
         {
+            dbContext = CreateTestDatabase();
             transferRepository = new TransferRepository(dbContext, extServices);
             dbContext.Database.EnsureCreated();
             SeedTestDatabase();
         }
 
-        private static AppDatabaseContext CreateTestDatabase()
+        private AppDatabaseContext CreateTestDatabase()
         {
-            var connection = new SqliteConnection(connectionString: "Data Source=:memory:");
             connection.Open();
 
             var options = new DbContextOptionsBuilder<AppDatabaseContext>().UseSqlite(connection).Options;
@@ -103,6 +104,13 @@ namespace simple_bank_test.Unit
             var transfer = await transferRepository.GetTransferByIdAsync("inexistentTransferID");
 
             Assert.Null(transfer);
+        }
+
+        public void Dispose()
+        {
+            dbContext.Dispose();
+            connection.Close();
+            connection.Dispose();
         }
     }
 }
