@@ -25,10 +25,10 @@ jobs:
 
       - name: Restore dependecies and Build
         run: |
-          dotnet restore simple-bank.sln
+          dotnet restore ./src/dotnet-simple-bank.csproj
+          dotnet restore ./tests/simple-bank-test.csproj
 
       - name: Build
-        run: dotnet build simple-bank.sln --no-restore
-
+        run: dotnet build
       - name: Test
-        run: dotnet test simple-bank.sln --no-build --verbosity normal
+        run: dotnet test --verbosity normal
