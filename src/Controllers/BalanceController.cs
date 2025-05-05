@@ -36,7 +36,7 @@ namespace dotnet_simple_bank.Controllers
             return Ok(balanceResponse);
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddBalance([FromBody] AddBalanceDto addBalanceDto)
         {
