@@ -13,7 +13,7 @@ jobs:
     env:
       JWT__Secret: ${{ secrets.JWT_SECRET }}
       JWT__Issuer: ${{ secrets.JWT_Issuer }}
-      JWT__Audience: ${{ secrets.JWT_Audienceoutra }}
+      JWT__Audience: ${{ secrets.JWT_Audience }}
 
     steps:
       - uses: actions/checkout@v4
@@ -24,9 +24,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore dependecies and Build
-        run: |
-          dotnet restore ./src/dotnet-simple-bank.csproj
-          dotnet restore ./tests/simple-bank-test.csproj
+        run: dotnet restore
 
       - name: Build
         run: dotnet build
