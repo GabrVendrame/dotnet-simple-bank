@@ -28,6 +28,8 @@ namespace dotnet_simple_bank.Controllers
 
             var payer = await _userManager.FindByEmailAsync(payerEmail);
 
+            if (transferDto.Amount <= 0) return BadRequest(CustomErrors.BadRequest("Transfer amount must be greater than 0"));
+
             if (payer!.Balance < transferDto.Amount)
                 return BadRequest(CustomErrors.BadRequest("Insufficient balance"));
 
@@ -38,7 +40,7 @@ namespace dotnet_simple_bank.Controllers
 
             var transfer = await _transferRepository.CreateTransferAsync(transferDto.Amount, payer, payee);
 
-            if (transfer.Id == string.Empty) return StatusCode(500, CustomErrors.InternalServerError("Transfer failed"));
+            if (transfer == null) return StatusCode(500, CustomErrors.InternalServerError("Transfer failed"));
 
             var sendMessageToPayee = await _externalServices.MessageTransferReceivedAsync();
 

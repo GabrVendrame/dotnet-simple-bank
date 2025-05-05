@@ -1,0 +1,32 @@
+name: Build & Test
+
+on:
+  push:
+    branches: ["dev"]
+  pull_request:
+    branches: ["dev", "main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      JWT__Secret: ${{ secrets.JWT_SECRET }}
+      JWT__Issuer: ${{ secrets.JWT_Issuer }}
+      JWT__Audience: ${{ secrets.JWT_Audience }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependecies and Build
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build
+      - name: Test
+        run: dotnet test --verbosity normal

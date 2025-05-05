@@ -58,23 +58,6 @@ namespace dotnet_simple_bank.Controllers
             return Unauthorized(CustomErrors.Unauthorized("Invalid Credentials"));
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetUser()
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var email = User.FindFirst(ClaimTypes.Email).Value;
-
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null) return NotFound(CustomErrors.NotFound("User not found"));
-
-            var userDto = Mapper.UserToGetUserDto(user);
-
-            return Ok(userDto);
-        }
-
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetUserById([FromRoute] string id)
@@ -90,7 +73,7 @@ namespace dotnet_simple_bank.Controllers
             return Ok(userDto);
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Authorize]
         public async Task<IActionResult> EditUser([FromBody] EditUserDto editDto)
         {

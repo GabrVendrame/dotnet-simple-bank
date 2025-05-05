@@ -49,6 +49,12 @@ Antes de rodar o projeto é necessário definir as variáveis para a geração d
 docker compose up --build
 ```
 
+Caso queira rodar a API em modo detach, basta adicionar a flag `-d` ao comando:
+
+```bash
+docker compose up --build -d
+```
+
 A API estará acessível em:
 [http://localhost:5118](http://localhost:5118)
 

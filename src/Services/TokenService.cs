@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static dotnet_simple_bank.Common.CustomExceptions;
 
 namespace dotnet_simple_bank.Services
 {
@@ -14,7 +15,8 @@ namespace dotnet_simple_bank.Services
 
         private string CreateToken(User user)
         {
-            if (string.IsNullOrEmpty(user.Email)) throw new ArgumentNullException(user.Email);
+            if (string.IsNullOrEmpty(user.Email)) throw new NullOrEmptyEmailExcepetion();
+            if (string.IsNullOrEmpty(user.CpfCnpj)) throw new NullOrEmptyCpfCnpjException();
 
             var role = user.CpfCnpj.Length == 11 ? "User" : "Seller";
 
@@ -39,7 +41,26 @@ namespace dotnet_simple_bank.Services
 
         public string GetToken(User user)
         {
-            return CreateToken(user);
+            try
+            {
+                return CreateToken(user);
+            }
+            catch (NullOrEmptyEmailExcepetion ex)
+            {
+                throw new NullOrEmptyEmailExcepetion(ex.Message, ex);
+            }
+            catch (NullOrEmptyCpfCnpjException ex)
+            {
+                throw new NullOrEmptyCpfCnpjException(ex.Message, ex);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                throw new SecretLengthException(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while generating the token.", ex);
+            }
         }
     }
 }
